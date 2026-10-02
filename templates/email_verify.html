@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify OTP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg: #e5d3af;
+        --card: #f5efe1;
+        --ink: #2e0a0e;
+        --muted: #6b4b4e;
+        --edge: #aec4d4;
+        --field: color-mix(in srgb, #f5efe1 45%, white);
+        --accent: #790d16;
+        --accent-hover: #5c0a11;
+        --accent-ink: #f5efe1;
+        --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+        --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      /* page background + vertical centering */
+      html {
+        background: var(--bg);
+        min-height: 100%;
+        display: grid;
+        place-items: center;
+      }
+
+      /* the body is the card, so the markup needs no wrapper */
+      body {
+        position: relative;
+        width: calc(100% - 40px);
+        max-width: 420px;
+        margin: 40px 20px 58px;
+        background: var(--card);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.5;
+        border-radius: 28px 28px 28px 6px;
+        padding: 40px 32px 32px;
+      }
+      body::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -18px;
+        width: 26px;
+        height: 20px;
+        background: var(--card);
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+      }
+
+      h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 2.1rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      p {
+        color: var(--muted);
+        margin-top: 8px;
+        margin-bottom: 28px;
+        overflow-wrap: anywhere;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        font-family: var(--display);
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: 0.5em;
+        text-indent: 0.5em;
+        text-align: center;
+        color: var(--ink);
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        padding: 14px 12px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      input[type="text"]:hover {
+        border-color: var(--muted);
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--edge);
+      }
+
+      button {
+        width: 100%;
+        font: inherit;
+        font-weight: 600;
+        color: var(--accent-ink);
+        background: var(--accent);
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-top: 22px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      button:hover {
+        background: var(--accent-hover);
+      }
+      button:active {
+        transform: scale(0.985);
+      }
+      button:focus-visible {
+        outline: 3px solid var(--edge);
+        outline-offset: 2px;
+      }
+
+      @media (max-width: 420px) {
+        body {
+          padding: 32px 22px 26px;
+        }
+        input[type="text"] {
+          font-size: 1.35rem;
+          letter-spacing: 0.4em;
+          text-indent: 0.4em;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+
+      .otp-error {
+        color: #b42318;
+        background: #fde8e7;
+        border: 1px solid #f5b5b0;
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-top: 12px;
+        margin-bottom: 18px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Verify OTP</h1>
+
+    <p>Email: {{ email }}</p>
+    {% if error %}
+    <p class="otp-error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/verify-otp_route">
+      <input type="hidden" name="email" value="{{ email }}" />
+
+      <label for="otp">Enter OTP:</label>
+      <input type="text" id="otp" name="otp" maxlength="6" required />
+
+      <button type="submit">Verify</button>
+    </form>
+  </body>
+</html>

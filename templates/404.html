@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E5D3AF;
+    --card: #F5EFE1;
+    --ink: #2e0a0e;
+    --muted: #6b4b4e;
+    --line: #E5D3AF;
+    --edge: #AEC4D4;
+    --field: color-mix(in srgb, #F5EFE1 45%, white);
+    --accent: #790D16;
+    --accent-hover: #5c0a11;
+    --accent-ink: #F5EFE1;
+    --focus: #AEC4D4;
+    --error: #790D16;
+    --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    display: grid;
+    place-items: center;
+    padding: 24px 20px 40px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border-radius: 28px 28px 28px 6px;
+    padding: 40px 32px 32px;
+    margin-bottom: 18px;
+  }
+  /* speech-bubble tail */
+  .card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    width: 26px;
+    height: 20px;
+    background: var(--card);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    color: var(--muted);
+    margin-top: 8px;
+    margin-bottom: 28px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .forgot {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .input-wrap { position: relative; }
+  input {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--field);
+    border: 1.5px solid var(--edge);
+    border-radius: 14px;
+    padding: 13px 16px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: var(--muted); opacity: .8; }
+  input:hover { border-color: var(--muted); }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus);
+  }
+  input[aria-invalid="true"] { border-color: var(--error); }
+  #password { padding-right: 70px; }
+
+  .toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .toggle:focus-visible,
+  .btn:focus-visible,
+  a:focus-visible {
+    outline: 3px solid var(--edge);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  .error {
+    color: var(--error);
+    font-size: 0.875rem;
+    margin-top: 6px;
+    min-height: 0;
+  }
+  .error:empty { display: none; }
+
+  .btn {
+    width: 100%;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: scale(.985); }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin: 24px 0;
+  }
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .signup {
+    text-align: center;
+    color: var(--muted);
+  }
+  .signup a { font-weight: 600; }
+
+  .legal {
+    max-width: 420px;
+    padding-left: 28px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+  .legal a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  .legal a:hover { color: var(--accent); }
+
+  @media (max-width: 420px) {
+    .card { padding: 32px 22px 26px; }
+    .legal { padding-left: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+  .code {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 5.5rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  a.btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  a.btn:hover { text-decoration: none; }
+  .back {
+    text-align: center;
+    margin-top: 18px;
+    color: var(--muted);
+  }
+  .back button {
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .back button:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .back button:focus-visible {
+    outline: 3px solid var(--edge);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+  <main style="width:100%;max-width:420px">
+    <div class="card">
+      <p class="code" aria-hidden="true">404</p>
+      <h1>Page not found</h1>
+      <p class="sub">This page doesn't exist or has been moved. Check the link, or head back to log in.</p>
+
+      <a class="btn" href="/">Back to log in</a>
+
+      <p class="back">Not what you expected? <button type="button" onclick="history.length > 1 ? history.back() : location.assign('login.html')">Go back</button></p>
+    </div>
+  </main>
+</body>
+</html>

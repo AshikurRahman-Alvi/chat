@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Create account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #e5d3af;
+        --card: #f5efe1;
+        --ink: #2e0a0e;
+        --muted: #6b4b4e;
+        --line: #e5d3af;
+        --edge: #aec4d4;
+        --field: color-mix(in srgb, #f5efe1 45%, white);
+        --accent: #790d16;
+        --accent-hover: #5c0a11;
+        --accent-ink: #f5efe1;
+        --focus: #aec4d4;
+        --error: #790d16;
+        --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+        --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.5;
+        min-height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 24px 20px 40px;
+      }
+
+      .card {
+        position: relative;
+        width: 100%;
+        max-width: 460px;
+        background: var(--card);
+        border-radius: 28px 28px 28px 6px;
+        padding: 40px 32px 32px;
+        margin-bottom: 18px;
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -18px;
+        width: 26px;
+        height: 20px;
+        background: var(--card);
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+      }
+
+      h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 2.1rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .sub {
+        color: var(--muted);
+        margin-top: 8px;
+        margin-bottom: 28px;
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .three {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr 1fr;
+        gap: 10px;
+      }
+
+      label,
+      .legend {
+        display: block;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+      }
+      .hint {
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+      input[type="text"],
+      input[type="password"],
+      select {
+        width: 100%;
+        font: inherit;
+        color: var(--ink);
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        padding: 13px 16px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 36px;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%236b4b4e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        cursor: pointer;
+      }
+      input::placeholder {
+        color: var(--muted);
+        opacity: 0.8;
+      }
+      input:hover,
+      select:hover {
+        border-color: var(--muted);
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--focus);
+      }
+      [aria-invalid="true"] {
+        border-color: var(--error) !important;
+      }
+      #password {
+        padding-right: 70px;
+      }
+
+      .toggle {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: 0;
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--accent);
+        padding: 8px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .toggle:focus-visible,
+      .btn:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--edge);
+        outline-offset: 2px;
+        border-radius: 6px;
+      }
+
+      /* gender options, Facebook style: three boxed radios */
+      fieldset {
+        border: 0;
+        padding: 0;
+        min-width: 0;
+      }
+      .genders {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .gender {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 0;
+        font-weight: 500;
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        padding: 12px 14px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .gender:hover {
+        border-color: var(--muted);
+      }
+      .gender input {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        flex: none;
+        border: 1.5px solid var(--muted);
+        border-radius: 50%;
+        background: var(--card);
+        margin: 0;
+        cursor: pointer;
+      }
+      .gender input:checked {
+        border-color: var(--accent);
+        background: radial-gradient(
+          circle,
+          var(--accent) 0 45%,
+          var(--card) 50%
+        );
+      }
+      .gender:has(input:checked) {
+        border-color: var(--accent);
+      }
+      .gender:has(input:focus-visible) {
+        box-shadow: 0 0 0 3px var(--focus);
+      }
+      #custom-wrap {
+        display: none;
+        margin-top: 10px;
+      }
+      #custom-wrap.show {
+        display: block;
+      }
+
+      .error {
+        color: var(--error);
+        font-size: 0.875rem;
+        margin-top: 6px;
+      }
+      .error:empty {
+        display: none;
+      }
+
+      .terms {
+        color: var(--muted);
+        font-size: 0.8125rem;
+        margin: 4px 0 14px;
+      }
+      .terms a {
+        color: var(--muted);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .terms a:hover {
+        color: var(--accent);
+      }
+
+      .btn {
+        width: 100%;
+        font: inherit;
+        font-weight: 600;
+        color: var(--accent-ink);
+        background: var(--accent);
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-top: 6px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .btn:hover {
+        background: var(--accent-hover);
+      }
+      .btn:active {
+        transform: scale(0.985);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 24px 0;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+
+      .signin {
+        text-align: center;
+        color: var(--muted);
+      }
+      .signin a {
+        font-weight: 600;
+      }
+
+      .done {
+        display: none;
+        text-align: center;
+        padding: 12px 0 4px;
+      }
+      .done.show {
+        display: block;
+      }
+      .done p {
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      @media (max-width: 440px) {
+        .card {
+          padding: 32px 22px 26px;
+        }
+        .genders {
+          grid-template-columns: 1fr;
+        }
+        .three {
+          grid-template-columns: 1fr 1.5fr 1.1fr;
+          gap: 8px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main style="width: 100%; max-width: 460px">
+      <div class="card">
+        <div id="form-view">
+          <h1>Create a new account</h1>
+          <p class="sub">It's quick and easy.</p>
+
+          <form id="signup" action="/submit_create" method="POST" novalidate>
+            <div class="field">
+              <div class="two">
+                <div>
+                  <label for="first">First name</label>
+                  <input
+                    id="first"
+                    name="first"
+                    type="text"
+                    autocomplete="given-name"
+                    placeholder="First name" />
+                  <p class="error" id="first-error" role="alert"></p>
+                </div>
+
+                <div>
+                  <label for="last">Surname</label>
+                  <input
+                    id="last"
+                    name="last"
+                    type="text"
+                    autocomplete="family-name"
+                    placeholder="Surname" />
+                  <p class="error" id="last-error" role="alert"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="identifier">Mobile number or email</label>
+              <input
+                id="identifier"
+                name="identifier"
+                type="text"
+                inputmode="email"
+                autocomplete="username"
+                placeholder="Mobile number or email address" />
+              <p class="error" id="identifier-error" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <label for="password">New password</label>
+
+              <div class="input-wrap">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="new-password"
+                  placeholder="At least 8 characters" />
+
+                <button
+                  type="button"
+                  class="toggle"
+                  id="toggle"
+                  aria-label="Show password"
+                  aria-pressed="false">
+                  Show
+                </button>
+              </div>
+
+              <p class="error" id="password-error" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <span class="legend" id="dob-label">Date of birth</span>
+
+              <div class="three" role="group" aria-labelledby="dob-label">
+                <select id="day" name="day" aria-label="Day"></select>
+                <select id="month" name="month" aria-label="Month"></select>
+                <select id="year" name="year" aria-label="Year"></select>
+              </div>
+
+              <p class="error" id="dob-error" role="alert"></p>
+            </div>
+
+            <fieldset class="field">
+              <legend class="legend">Gender</legend>
+
+              <div class="genders">
+                <label class="gender">
+                  Female
+                  <input type="radio" name="gender" value="female" />
+                </label>
+
+                <label class="gender">
+                  Male
+                  <input type="radio" name="gender" value="male" />
+                </label>
+
+                <label class="gender">
+                  Custom
+                  <input type="radio" name="gender" value="custom" />
+                </label>
+              </div>
+
+              <div id="custom-wrap">
+                <input
+                  id="custom"
+                  name="custom_gender"
+                  type="text"
+                  placeholder="Gender (optional)"
+                  aria-label="Custom gender" />
+              </div>
+
+              <p class="error" id="gender-error" role="alert"></p>
+            </fieldset>
+
+            <p class="terms">
+              By clicking Sign up, you agree to our
+              <a href="/legal">Terms</a> and
+              <a href="/legal">Privacy Policy</a>.
+            </p>
+
+            <button class="btn" type="submit">Sign up</button>
+          </form>
+
+          <div class="divider" role="separator">OR</div>
+
+          <p class="signin">Already have an account? <a href="/">Log in</a></p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      // Date of birth options
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const now = new Date();
+      const opt = (v, t, sel) => {
+        const o = document.createElement("option");
+        o.value = v;
+        o.textContent = t;
+        if (sel) o.selected = true;
+        return o;
+      };
+      $("day").append(opt("", "Day", true));
+      for (let d = 1; d <= 31; d++) $("day").append(opt(d, d));
+      $("month").append(opt("", "Month", true));
+      months.forEach((m, i) => $("month").append(opt(i + 1, m)));
+      $("year").append(opt("", "Year", true));
+      for (let y = now.getFullYear(); y >= now.getFullYear() - 110; y--)
+        $("year").append(opt(y, y));
+
+      // Show / hide password
+      $("toggle").addEventListener("click", () => {
+        const show = $("password").type === "password";
+        $("password").type = show ? "text" : "password";
+        $("toggle").textContent = show ? "Hide" : "Show";
+        $("toggle").setAttribute(
+          "aria-label",
+          show ? "Hide password" : "Show password",
+        );
+        $("toggle").setAttribute("aria-pressed", String(show));
+      });
+
+      // Custom gender field
+      document.querySelectorAll('input[name="gender"]').forEach((r) => {
+        r.addEventListener("change", () => {
+          $("custom-wrap").classList.toggle(
+            "show",
+            r.value === "custom" && r.checked,
+          );
+        });
+      });
+
+      function setError(input, errId, message) {
+        $(errId).textContent = message;
+        (Array.isArray(input) ? input : [input]).forEach((el) =>
+          el.setAttribute("aria-invalid", message ? "true" : "false"),
+        );
+      }
+
+      $("signup").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const first = $("first").value.trim();
+        const last = $("last").value.trim();
+        const id = $("identifier").value.trim();
+        const pw = $("password").value;
+
+        const d = +$("day").value;
+        const m = +$("month").value;
+        const y = +$("year").value;
+
+        const gender = document.querySelector('input[name="gender"]:checked');
+
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id);
+        const isPhone = /^\+?[\d\s\-()]{7,}$/.test(id);
+
+        setError(
+          $("first"),
+          "first-error",
+          first ? "" : "Enter your first name.",
+        );
+
+        setError($("last"), "last-error", last ? "" : "Enter your surname.");
+
+        setError(
+          $("identifier"),
+          "identifier-error",
+          !id
+            ? "Enter your mobile number or email."
+            : isEmail || isPhone
+              ? ""
+              : "Enter a valid mobile number or email.",
+        );
+
+        setError(
+          $("password"),
+          "password-error",
+          !pw
+            ? "Enter a new password."
+            : pw.length < 8
+              ? "Use at least 8 characters."
+              : "",
+        );
+
+        let dobMsg = "";
+
+        if (!d || !m || !y) {
+          dobMsg = "Select your full date of birth.";
+        } else {
+          const dt = new Date(y, m - 1, d);
+
+          if (
+            dt.getFullYear() !== y ||
+            dt.getMonth() !== m - 1 ||
+            dt.getDate() !== d
+          ) {
+            dobMsg = "That date doesn't exist. Check the day and month.";
+          } else {
+            let age = new Date().getFullYear() - y;
+
+            const today = new Date();
+
+            if (today < new Date(today.getFullYear(), m - 1, d)) {
+              age--;
+            }
+
+            if (age < 13) {
+              dobMsg = "You must be at least 13 to create an account.";
+            }
+          }
+        }
+
+        setError([$("day"), $("month"), $("year")], "dob-error", dobMsg);
+
+        $("gender-error").textContent = gender ? "" : "Select your gender.";
+
+        const ok =
+          first &&
+          last &&
+          id &&
+          (isEmail || isPhone) &&
+          pw.length >= 8 &&
+          !dobMsg &&
+          gender;
+
+        if (!ok) {
+          return;
+        }
+
+        // Actually submit the form to Flask
+        e.target.submit();
+      });
+    </script>
+  </body>
+</html>

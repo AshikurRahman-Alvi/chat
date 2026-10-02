@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms and Privacy Policy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E5D3AF;
+    --card: #F5EFE1;
+    --ink: #2e0a0e;
+    --muted: #6b4b4e;
+    --line: #E5D3AF;
+    --edge: #AEC4D4;
+    --field: color-mix(in srgb, #F5EFE1 45%, white);
+    --accent: #790D16;
+    --accent-hover: #5c0a11;
+    --accent-ink: #F5EFE1;
+    --focus: #AEC4D4;
+    --error: #790D16;
+    --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    display: grid;
+    place-items: center;
+    padding: 24px 20px 40px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border-radius: 28px 28px 28px 6px;
+    padding: 40px 32px 32px;
+    margin-bottom: 18px;
+  }
+  /* speech-bubble tail */
+  .card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    width: 26px;
+    height: 20px;
+    background: var(--card);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 2.1rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    color: var(--muted);
+    margin-top: 8px;
+    margin-bottom: 28px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .forgot {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .input-wrap { position: relative; }
+  input {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--field);
+    border: 1.5px solid var(--edge);
+    border-radius: 14px;
+    padding: 13px 16px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: var(--muted); opacity: .8; }
+  input:hover { border-color: var(--muted); }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus);
+  }
+  input[aria-invalid="true"] { border-color: var(--error); }
+  #password { padding-right: 70px; }
+
+  .toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .toggle:focus-visible,
+  .btn:focus-visible,
+  a:focus-visible {
+    outline: 3px solid var(--edge);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  .error {
+    color: var(--error);
+    font-size: 0.875rem;
+    margin-top: 6px;
+    min-height: 0;
+  }
+  .error:empty { display: none; }
+
+  .btn {
+    width: 100%;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: scale(.985); }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin: 24px 0;
+  }
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .signup {
+    text-align: center;
+    color: var(--muted);
+  }
+  .signup a { font-weight: 600; }
+
+  .legal {
+    max-width: 420px;
+    padding-left: 28px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+  .legal a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  .legal a:hover { color: var(--accent); }
+
+  @media (max-width: 420px) {
+    .card { padding: 32px 22px 26px; }
+    .legal { padding-left: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+  body { display: block; padding: 24px 20px 48px; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .card.doc { max-width: none; padding: 40px 36px 36px; margin-bottom: 18px; }
+  .tabs { display: flex; gap: 8px; margin: 22px 0 6px; flex-wrap: wrap; }
+  .tabs a {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--accent);
+    border: 1.5px solid var(--edge);
+    border-radius: 999px;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  .tabs a:hover { background: var(--field); }
+  section { padding-top: 36px; scroll-margin-top: 16px; }
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  h3 { font-size: 1.05rem; font-weight: 600; margin: 24px 0 6px; }
+  .updated { color: var(--muted); font-size: 0.9rem; margin-bottom: 8px; }
+  .doc p, .doc li { max-width: 68ch; }
+  .doc p { margin-top: 8px; }
+  .doc ul { margin: 8px 0 0; padding-left: 22px; }
+  .doc li { margin-top: 4px; }
+  .doc hr { border: 0; height: 1px; background: var(--line); margin: 40px 0 0; }
+  .home { text-align: center; color: var(--muted); }
+  @media (max-width: 480px) { .card.doc { padding: 30px 22px 28px; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card doc">
+      <h1>Terms and Privacy Policy</h1>
+      <p class="sub" style="margin-bottom:0">How you can use [App Name], and how we handle your information.</p>
+
+      <nav class="tabs" aria-label="Sections">
+        <a href="#terms">Terms of Service</a>
+        <a href="#privacy">Privacy Policy</a>
+      </nav>
+
+      <section id="terms">
+        <h2>Terms of Service</h2>
+        <p class="updated">Last updated: [date]</p>
+        <p>These terms apply when you use [App Name]. By creating an account or using the app, you agree to them. If you don't agree, please don't use the app.</p>
+
+        <h3>Your account</h3>
+        <p>You need an accurate email address or phone number to sign up. Keep your password private and tell us right away if you think someone else has access to your account. You are responsible for activity that happens under your account.</p>
+
+        <h3>Using the app</h3>
+        <p>You agree not to:</p>
+        <ul>
+          <li>send spam, scams, or messages meant to deceive people;</li>
+          <li>harass, threaten, or abuse other users;</li>
+          <li>share illegal content or content that infringes someone else's rights;</li>
+          <li>try to break, overload, or gain unauthorized access to the app or other accounts.</li>
+        </ul>
+
+        <h3>Your content</h3>
+        <p>You keep ownership of the messages and files you send. You give us permission to store, transmit, and display them as needed to run the app and deliver your messages to the people you choose.</p>
+
+        <h3>Suspending or closing accounts</h3>
+        <p>You can stop using [App Name] and delete your account at any time. We may suspend or close accounts that break these terms or put other people at risk.</p>
+
+        <h3>Changes to these terms</h3>
+        <p>We may update these terms. If we make a significant change, we will notify you in the app or by email before it takes effect. Continuing to use the app after that means you accept the updated terms.</p>
+
+        <h3>Contact us</h3>
+        <p>Questions about these terms? Email [contact email].</p>
+      </section>
+
+      <hr>
+
+      <section id="privacy">
+        <h2>Privacy Policy</h2>
+        <p class="updated">Last updated: [date]</p>
+        <p>This policy explains what information [App Name] collects, why we collect it, and the choices you have.</p>
+
+        <h3>Information we collect</h3>
+        <ul>
+          <li><strong>Account details:</strong> your name, email address or phone number, and password.</li>
+          <li><strong>Messages and content:</strong> the messages, files, and other content you send through the app.</li>
+          <li><strong>Usage and device information:</strong> how you use the app, your device type, and your IP address.</li>
+        </ul>
+
+        <h3>How we use your information</h3>
+        <ul>
+          <li>To create and secure your account and deliver your messages.</li>
+          <li>To keep the app running, fix problems, and improve it.</li>
+          <li>To send you service notices, such as security alerts and password resets.</li>
+          <li>To prevent abuse and follow the law.</li>
+        </ul>
+
+        <h3>How we share information</h3>
+        <p>We don't sell your personal information. We share it only with people you message, with service providers who help us run the app under strict agreements, and when the law requires it.</p>
+
+        <h3>How long we keep it</h3>
+        <p>We keep your information while your account is active. When you delete your account, we delete or anonymize your information within [number] days, unless we must keep it for legal reasons.</p>
+
+        <h3>Your choices</h3>
+        <p>You can view and update your account details in the app, delete your account, and ask us for a copy of your information. To make a request, email [contact email].</p>
+
+        <h3>Security</h3>
+        <p>We use reasonable technical and organizational measures to protect your information. No system is completely secure, so please use a strong, unique password.</p>
+
+        <h3>Children</h3>
+        <p>[App Name] is not meant for children under [minimum age]. If you believe a child has created an account, contact us and we will remove it.</p>
+
+        <h3>Changes to this policy</h3>
+        <p>We may update this policy and will tell you about significant changes in the app or by email.</p>
+
+        <h3>Contact us</h3>
+        <p>Questions about privacy? Email [contact email].</p>
+      </section>
+    </div>
+
+    <p class="home"><a href="/">Back to log in</a></p>
+    <br>
+    <br><br><br>
+  </div>
+</body>
+</html>

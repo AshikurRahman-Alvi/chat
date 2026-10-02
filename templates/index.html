@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Log in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #e5d3af;
+        --card: #f5efe1;
+        --ink: #2e0a0e;
+        --muted: #6b4b4e;
+        --line: #e5d3af;
+        --edge: #aec4d4;
+        --field: color-mix(in srgb, #f5efe1 45%, white);
+        --accent: #790d16;
+        --accent-hover: #5c0a11;
+        --accent-ink: #f5efe1;
+        --focus: #aec4d4;
+        --error: #790d16;
+        --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+        --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.5;
+        display: grid;
+        place-items: center;
+        padding: 24px 20px 40px;
+      }
+
+      .card {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: var(--card);
+        border-radius: 28px 28px 28px 6px;
+        padding: 40px 32px 32px;
+        margin-bottom: 18px;
+      }
+      /* speech-bubble tail */
+      .card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -18px;
+        width: 26px;
+        height: 20px;
+        background: var(--card);
+        clip-path: polygon(0 0, 100% 0, 0 100%);
+      }
+
+      h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 2.1rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .sub {
+        color: var(--muted);
+        margin-top: 8px;
+        margin-bottom: 28px;
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 6px;
+      }
+      label {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .forgot {
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+      input {
+        width: 100%;
+        font: inherit;
+        color: var(--ink);
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        padding: 13px 16px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      input::placeholder {
+        color: var(--muted);
+        opacity: 0.8;
+      }
+      input:hover {
+        border-color: var(--muted);
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--focus);
+      }
+      input[aria-invalid="true"] {
+        border-color: var(--error);
+      }
+      #password {
+        padding-right: 70px;
+      }
+
+      .toggle {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: 0;
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--accent);
+        padding: 8px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .toggle:focus-visible,
+      .btn:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--edge);
+        outline-offset: 2px;
+        border-radius: 6px;
+      }
+
+      .error {
+        color: var(--error);
+        font-size: 0.875rem;
+        margin-top: 6px;
+        min-height: 0;
+      }
+      .error:empty {
+        display: none;
+      }
+
+      .btn {
+        width: 100%;
+        font: inherit;
+        font-weight: 600;
+        color: var(--accent-ink);
+        background: var(--accent);
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-top: 6px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .btn:hover {
+        background: var(--accent-hover);
+      }
+      .btn:active {
+        transform: scale(0.985);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 24px 0;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+
+      .signup {
+        text-align: center;
+        color: var(--muted);
+      }
+      .signup a {
+        font-weight: 600;
+      }
+
+      .legal {
+        max-width: 420px;
+        padding-left: 28px;
+        text-align: left;
+        color: var(--muted);
+        font-size: 0.8125rem;
+      }
+      .legal a {
+        color: var(--muted);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .legal a:hover {
+        color: var(--accent);
+      }
+
+      @media (max-width: 420px) {
+        .card {
+          padding: 32px 22px 26px;
+        }
+        .legal {
+          padding-left: 22px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main style="width: 100%; max-width: 420px">
+      <div class="card">
+        <h1>Welcome back</h1>
+        <p class="sub">Log in to continue your conversations.</p>
+
+        <form id="login" action="/submit_login" method="POST" novalidate>
+          <div class="field">
+            <div class="row">
+              <label for="identifier">Email or phone number</label>
+            </div>
+            <input
+              id="identifier"
+              name="identifier"
+              type="text"
+              inputmode="email"
+              autocomplete="username"
+              placeholder="Enter your email or phone" />
+            <p class="error" id="identifier-error" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="password">Password</label>
+              <a class="forgot" href="/forgot">Forgot password?</a>
+            </div>
+            <div class="input-wrap">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter your password" />
+              <button
+                type="button"
+                class="toggle"
+                id="toggle"
+                aria-label="Show password"
+                aria-pressed="false">
+                Show
+              </button>
+            </div>
+            <p class="error" id="password-error" role="alert">
+              {{ login_error or '' }}
+            </p>
+          </div>
+
+          <button class="btn" type="submit">Log In</button>
+        </form>
+
+        <div class="divider" role="separator">OR</div>
+
+        <p class="signup">
+          Don't have an account? <a href="/Create_account">Create an account</a>
+        </p>
+      </div>
+
+      <p class="legal">
+        By continuing, you agree to our <a href="/legal">Terms</a> and
+        <a href="/legal">Privacy Policy</a>.
+      </p>
+    </main>
+
+    <script>
+      const form = document.getElementById("login");
+
+      const idInput = document.getElementById("identifier");
+      const pwInput = document.getElementById("password");
+
+      const idError = document.getElementById("identifier-error");
+      const pwError = document.getElementById("password-error");
+
+      const toggle = document.getElementById("toggle");
+
+      // ==========================================
+      // SHOW / HIDE PASSWORD
+      // ==========================================
+
+      toggle.addEventListener("click", () => {
+        const show = pwInput.type === "password";
+
+        pwInput.type = show ? "text" : "password";
+
+        toggle.textContent = show ? "Hide" : "Show";
+
+        toggle.setAttribute(
+          "aria-label",
+          show ? "Hide password" : "Show password",
+        );
+
+        toggle.setAttribute("aria-pressed", String(show));
+      });
+
+      // ==========================================
+      // SET ERROR
+      // ==========================================
+
+      function setError(input, element, message) {
+        element.textContent = message;
+
+        input.setAttribute("aria-invalid", message ? "true" : "false");
+      }
+
+      // ==========================================
+      // CLEAR ERRORS
+      // ==========================================
+
+      function clearErrors() {
+        setError(idInput, idError, "");
+
+        setError(pwInput, pwError, "");
+      }
+
+      // ==========================================
+      // LOGIN FORM
+      // ==========================================
+
+      form.addEventListener("submit", (e) => {
+        // Stop normal form submission
+        e.preventDefault();
+
+        // Get values
+        const id = idInput.value.trim();
+
+        const pw = pwInput.value;
+
+        // ========================================
+        // EMAIL VALIDATION
+        // ========================================
+
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id);
+
+        // ========================================
+        // PHONE VALIDATION
+        // ========================================
+
+        const isPhone = /^\+?[\d\s\-()]{7,}$/.test(id);
+
+        // ========================================
+        // IDENTIFIER VALIDATION
+        // ========================================
+
+        let identifierValid = true;
+
+        if (!id) {
+          setError(idInput, idError, "Enter your email or phone number.");
+
+          identifierValid = false;
+        } else if (!isEmail && !isPhone) {
+          setError(idInput, idError, "Enter a valid email or phone number.");
+
+          identifierValid = false;
+        } else {
+          setError(idInput, idError, "");
+        }
+
+        // ========================================
+        // PASSWORD VALIDATION
+        // ========================================
+
+        let passwordValid = true;
+
+        if (!pw) {
+          setError(pwInput, pwError, "Enter your password.");
+
+          passwordValid = false;
+        } else {
+          setError(pwInput, pwError, "");
+        }
+
+        // ========================================
+        // STOP IF INVALID
+        // ========================================
+
+        if (!identifierValid || !passwordValid) {
+          return;
+        }
+
+        // ========================================
+        // EVERYTHING IS VALID
+        // SEND TO FLASK
+        // ========================================
+
+        form.submit();
+      });
+
+      // ==========================================
+      // CLEAR IDENTIFIER ERROR WHEN TYPING
+      // ==========================================
+
+      idInput.addEventListener("input", () => {
+        if (idInput.value.trim()) {
+          setError(idInput, idError, "");
+        }
+      });
+
+      // ==========================================
+      // CLEAR PASSWORD ERROR WHEN TYPING
+      // ==========================================
+
+      pwInput.addEventListener("input", () => {
+        if (pwInput.value) {
+          setError(pwInput, pwError, "");
+        }
+      });
+    </script>
+  </body>
+</html>
