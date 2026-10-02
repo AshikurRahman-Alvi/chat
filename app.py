@@ -114,7 +114,7 @@ def verify_otp_route():
 
 @app.route("/Create_account")
 def Create_account():
-    return render_template("Create_account.html")
+    return render_template("create_account.html")
 
 @app.route("/legal")
 def legal():
