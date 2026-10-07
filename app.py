@@ -106,7 +106,7 @@ def verify_otp_route():
         )
 
     # OTP is correct
-    return redirect("/login")
+    return redirect("/verified")
 
 
 @app.route("/Create_account")
