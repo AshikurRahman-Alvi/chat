@@ -9,7 +9,7 @@ client = MongoClient(MONGODB_URL)
 
 db = client["messaging_app"]
 user_collection = db["user"]
-temp_user_collection = db["user"]
+temp_user_collection = db["temp_user"]
 otp_collection = db["otps"]
 
 
