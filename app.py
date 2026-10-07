@@ -56,10 +56,10 @@ def submit_create():
     gender = request.form.get("gender")
     custom_gender = request.form.get("custom_gender")
 
-    is_user_e =db.is_user_exists_by_email(identifier)
+    #is_user_e = db.is_user_exists_by_email(identifier)
 
-    if is_user_e:
-        db.create_user(
+    
+    db.create_user(
         first=first,
         last=last,
         identifier=identifier,
@@ -69,9 +69,7 @@ def submit_create():
         year=year,
         gender=gender
         )
-    else:
-        print("email alrady taken")
-
+    
     
     code = otp.generate_otp()
     otp.save_otp(identifier, code)
@@ -119,6 +117,10 @@ def Create_account():
 @app.route("/legal")
 def legal():
     return render_template("legal.html")
+
+@app.route("/verified")
+def legal():
+    return render_template("verified.html")
 
 
 @app.errorhandler(404)

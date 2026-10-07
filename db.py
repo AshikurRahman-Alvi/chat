@@ -9,6 +9,7 @@ client = MongoClient(MONGODB_URL)
 
 db = client["messaging_app"]
 user_collection = db["user"]
+temp_user_collection = db["user"]
 otp_collection = db["otps"]
 
 
@@ -22,7 +23,7 @@ def is_user_exists_by_email(email):
     return user is not None
 
 
-def create_user(first, last, identifier, password_hash,
+def create_temp_user(first, last, identifier, password_hash,
                 day, month, year, gender, custom_gender=None):
 
     now = datetime.now(timezone.utc)
@@ -78,7 +79,7 @@ def create_user(first, last, identifier, password_hash,
     # Remove _id so MongoDB generates ObjectId automatically
     user.pop("_id")
 
-    result = user_collection.insert_one(user)
+    result = temp_user_collection.insert_one(user)
 
     return result.inserted_id
 
