@@ -59,7 +59,7 @@ def submit_create():
     #is_user_e = db.is_user_exists_by_email(identifier)
 
     
-    db.create_user(
+    db.temp_user_collection(
         first=first,
         last=last,
         identifier=identifier,
@@ -91,8 +91,7 @@ def verify_otp_route():
     email = request.form.get("email")
     otps = request.form.get("otp")
 
-    print(email)
-    print(otps)
+   
 
     result = otp.verify_otp(email,otps)
     print(result)
