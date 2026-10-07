@@ -1,34 +1,26 @@
-import smtplib
-from email.message import EmailMessage
+import os
+import resend
 
-sender = "xyz.123.verify@gmail.com"
-password = "jhamzzhpdnfgxhmr"
+resend.api_key = os.getenv("RESEND_API_KEY")
+
+sender = "chat <onboarding@resend.dev>"
+
 
 def sent_mail(receiver, otp):
-    msg = EmailMessage()
-    msg["Subject"] = "Test email"
-    msg["From"] = sender
-    msg["To"] = receiver
-    msg.set_content(f"Your OTP is {otp}")
-
     try:
-        print("Connecting to Gmail...")
+        print("Sending OTP email...")
 
-        with smtplib.SMTP_SSL(
-            "smtp.gmail.com",
-            465,
-            timeout=15
-        ) as smtp:
+        params = {
+            "from": sender,
+            "to": [receiver],
+            "subject": "Your OTP Code",
+            "text": f"Your OTP is {otp}\n\nThis OTP will expire in 5 minutes."
+        }
 
-            print("Connected to Gmail")
+        response = resend.Emails.send(params)
 
-            smtp.login(sender, password)
-
-            print("Logged in to Gmail")
-
-            smtp.send_message(msg)
-
-            print("Email sent!")
+        print("Email sent successfully!")
+        print(response)
 
         return True
 
