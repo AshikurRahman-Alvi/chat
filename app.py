@@ -59,7 +59,7 @@ def submit_create():
     #is_user_e = db.is_user_exists_by_email(identifier)
 
     
-    db.temp_user_collection(
+    db.create_temp_user(
         first=first,
         last=last,
         identifier=identifier,
