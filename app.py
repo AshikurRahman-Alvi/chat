@@ -118,7 +118,7 @@ def legal():
     return render_template("legal.html")
 
 @app.route("/verified")
-def legal():
+def verified():
     return render_template("verified.html")
 
 
