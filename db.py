@@ -59,6 +59,8 @@ def create_temp_user(first, last, identifier, password_hash,
 
         "gender": gender,
 
+        "connection" : [],
+
         "account": {
             "created_at": now,
             "updated_at": now,
