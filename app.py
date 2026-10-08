@@ -2,10 +2,11 @@ from flask import Flask, render_template, request, redirect, session
 import db
 import password as pd
 import requests,mail,otp
+import os
 
 
 app = Flask(__name__)
-app.secret_key = "your-secret-key"
+app.secret_key = os.environ["SECRET_KEY"]
 
 
 @app.route("/")
