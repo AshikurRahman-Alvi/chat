@@ -105,6 +105,16 @@ def verify_otp_route():
             error="Incorrect OTP. Please try again."
         )
     else:
+        user_id = db.transfer_temp_to_user(email)
+        db.otp_collection.delete_one({"identifier": email})  # OTP can't be reused
+
+        if user_id is None:
+            return render_template(
+                "email_verify.html",
+                email=email,
+                error="Account could not be created. Please sign up again."
+            )
+
         # OTP is correct
         return redirect("/verified")
 

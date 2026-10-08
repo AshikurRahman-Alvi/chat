@@ -111,3 +111,39 @@ def login(identifier, password):
         return False
 
     return True
+
+
+
+def _identifier_query(identifier):
+    if "@" in identifier:
+        return {"email": identifier}
+    return {"phone": identifier}
+
+
+def transfer_temp_to_user(identifier):
+    """Move a verified temp user into the user collection.
+    Returns the new user's _id, or None if there's nothing to transfer
+    or the account already exists."""
+    query = _identifier_query(identifier)
+
+    # Latest signup attempt wins if there are duplicates
+    temp = temp_user_collection.find_one(
+        query, sort=[("account.created_at", -1)]
+    )
+    if temp is None:
+        return None
+
+    # Already registered: just clean up the temp records
+    if user_collection.find_one(query, {"_id": 1}):
+        temp_user_collection.delete_many(query)
+        return None
+
+    temp.pop("_id")  # let MongoDB create a new _id in the user collection
+    now = datetime.now(timezone.utc)
+    temp["account"]["email_verified"] = temp["email"] is not None
+    temp["account"]["phone_verified"] = temp["phone"] is not None
+    temp["account"]["updated_at"] = now
+
+    result = user_collection.insert_one(temp)
+    temp_user_collection.delete_many(query)  # remove all attempts for this identifier
+    return result.inserted_id
