@@ -22,7 +22,7 @@ def home():
 
 @app.route("/login")
 def login():
-    return "<h1>login</h1>"
+    return render_template("inbox.html")
 
 @app.route("/forgot")
 def forgot():
