@@ -46,10 +46,7 @@ def submit_login():
         session.permanent = True
         session["user_id"] = db.get_user_id(identifier)
 
-
-
-
-        return "Login successful"
+        return redirect("/")
     else:
         session["login_error"] = "Incorrect email or password."
         return redirect("/")
