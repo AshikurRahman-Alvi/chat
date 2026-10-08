@@ -29,7 +29,7 @@ def home():
 
         # User ID is invalid or user no longer exists
         if not user:
-            session.pop("user_id", None)
+            session.clear()
 
             return redirect("/")
 
