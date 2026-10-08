@@ -24,7 +24,21 @@ def home():
             login_error=login_error
         )
     else:
-        return render_template("inbox.html")
+        # Get logged-in user's data
+        user = db.get_user_by_id(user_id)
+
+        # User ID is invalid or user no longer exists
+        if not user:
+            session.pop("user_id", None)
+
+            return redirect("/")
+
+        # User is logged in
+        return render_template(
+            "inbox.html",
+            user=user
+        )
+
 
 
 
