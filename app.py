@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
+from datetime import timedelta
 import db
 import password as pd
 import requests,mail,otp
@@ -7,16 +8,23 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.environ["SECRET_KEY"]
+app.permanent_session_lifetime = timedelta(days=30)
 
 
 @app.route("/")
 def home():
-    login_error = session.pop("login_error", None)
 
-    return render_template(
-        "index.html",
-        login_error=login_error
-    )
+    user_id = session.get("user_id")
+
+    if not user_id:
+        
+        login_error = session.pop("login_error", None)
+        return render_template(
+            "index.html",
+            login_error=login_error
+        )
+    else:
+        return "Login successful"
 
 
 
@@ -33,9 +41,14 @@ def submit_login():
     identifier = request.form.get("identifier")
     password = request.form.get("password")
 
-
-
     if db.login(identifier,password):
+
+        session.permanent = True
+        session["user_id"] = db.get_user_id(identifier)
+
+
+
+
         return "Login successful"
     else:
         session["login_error"] = "Incorrect email or password."

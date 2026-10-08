@@ -1,7 +1,9 @@
 from pymongo import MongoClient
 from datetime import datetime, timezone
+import secrets
 import hashlib
 import os
+from bson import ObjectId
 
 MONGODB_URL = os.getenv("MONGODB_URL")
 
@@ -12,7 +14,7 @@ db = client["messaging_app"]
 user_collection = db["user"]
 temp_user_collection = db["temp_user"]
 otp_collection = db["otps"]
-
+sessions_collection = db["sessions"]
 
 
 def is_user_exists_by_email(email):
@@ -150,3 +152,21 @@ def transfer_temp_to_user(identifier):
     result = user_collection.insert_one(temp)
     temp_user_collection.delete_many(query)  # remove all attempts for this identifier
     return result.inserted_id
+
+
+
+def get_user_id(email):
+    user = user_collection.find_one({"email": email})
+
+    if user:
+        return user["_id"]
+
+    return None
+
+
+def get_user_by_id(user_id):
+    user = user_collection.find_one({
+        "_id": ObjectId(user_id)
+    })
+
+    return user
