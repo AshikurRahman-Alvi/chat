@@ -24,7 +24,7 @@ def home():
             login_error=login_error
         )
     else:
-        return "Login successful"
+        return render_template("inbox.html")
 
 
 
