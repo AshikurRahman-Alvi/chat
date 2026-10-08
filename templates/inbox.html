@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chatify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #e5d3af;
+        --card: #f5efe1;
+        --ink: #2e0a0e;
+        --muted: #6b4b4e;
+        --line: #e5d3af;
+        --edge: #aec4d4;
+        --field: color-mix(in srgb, #f5efe1 45%, white);
+        --accent: #790d16;
+        --accent-hover: #5c0a11;
+        --accent-ink: #f5efe1;
+        --hover-row: color-mix(in srgb, #e5d3af 35%, #f5efe1);
+        --active-row: color-mix(in srgb, #aec4d4 28%, #f5efe1);
+        --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+        --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.45;
+        padding: 20px;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+        border: 0;
+        background: none;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      .chat:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--edge);
+        outline-offset: 2px;
+      }
+
+      /* ---------- shell ---------- */
+      .app {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        height: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        gap: 18px;
+      }
+      .panel {
+        background: var(--card);
+        border-radius: 28px 28px 28px 6px;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      /* ---------- inbox (left) ---------- */
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 22px 16px 8px 24px;
+      }
+      .top h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.7rem;
+        letter-spacing: -0.02em;
+        flex: 1;
+      }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+      }
+      .icon-btn:hover {
+        background: var(--hover-row);
+        color: var(--accent);
+      }
+      .icon-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .search {
+        padding: 8px 20px 4px;
+      }
+      .search input {
+        width: 100%;
+        font: inherit;
+        color: var(--ink);
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        padding: 11px 16px;
+      }
+      .search input::placeholder {
+        color: var(--muted);
+        opacity: 0.8;
+      }
+      .search input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--edge);
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        padding: 10px 20px 12px;
+      }
+      .chip {
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--edge);
+        color: var(--muted);
+      }
+      .chip:hover {
+        border-color: var(--muted);
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+      }
+
+      .list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 10px 14px;
+      }
+      .chat {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+        padding: 12px 14px;
+        border-radius: 18px;
+      }
+      .chat:hover {
+        background: var(--hover-row);
+      }
+      .chat[aria-current="true"] {
+        background: var(--active-row);
+      }
+      .avatar {
+        flex: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 700;
+        color: var(--accent-ink);
+        position: relative;
+      }
+      .avatar.online::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #3f8f5b;
+        border: 2px solid var(--card);
+      }
+      .meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .line1,
+      .line2 {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+      }
+      .name {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .time {
+        font-size: 0.8125rem;
+        color: var(--muted);
+        flex: none;
+      }
+      .time.unread {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .preview {
+        font-size: 0.9rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .badge {
+        flex: none;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: grid;
+        place-items: center;
+      }
+      .empty-list {
+        text-align: center;
+        color: var(--muted);
+        padding: 40px 20px;
+      }
+
+      /* ---------- conversation (right) ---------- */
+      .head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 20px;
+        border-bottom: 1.5px solid var(--line);
+      }
+      .head .meta .name {
+        font-family: var(--display);
+        font-size: 1.1rem;
+      }
+      .head .status {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .back {
+        display: none;
+      }
+
+      .thread {
+        flex: 1;
+        overflow-y: auto;
+        background: var(--bg);
+        padding: 20px clamp(14px, 4vw, 48px);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .day {
+        align-self: center;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--muted);
+        background: var(--card);
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin: 10px 0;
+      }
+      .msg {
+        max-width: min(520px, 78%);
+        padding: 9px 14px 7px;
+        border-radius: 18px;
+        overflow-wrap: anywhere;
+      }
+      .msg.in {
+        align-self: flex-start;
+        background: var(--card);
+        border-bottom-left-radius: 5px;
+      }
+      .msg.out {
+        align-self: flex-end;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-bottom-right-radius: 5px;
+      }
+      .msg .t {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.72rem;
+        margin-top: 2px;
+        color: var(--muted);
+      }
+      .msg.out .t {
+        color: color-mix(in srgb, var(--accent-ink) 75%, var(--accent));
+      }
+      .ticks {
+        width: 16px;
+        height: 12px;
+      }
+      .ticks.seen {
+        color: var(--edge);
+      }
+
+      .composer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px 14px;
+      }
+      .composer input {
+        flex: 1;
+        font: inherit;
+        color: var(--ink);
+        background: var(--field);
+        border: 1.5px solid var(--edge);
+        border-radius: 999px;
+        padding: 12px 18px;
+      }
+      .composer input::placeholder {
+        color: var(--muted);
+        opacity: 0.8;
+      }
+      .composer input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--edge);
+      }
+      .send {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--accent-ink);
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .send:hover {
+        background: var(--accent-hover);
+      }
+      .send:active {
+        transform: scale(0.94);
+      }
+      .send svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .blank {
+        flex: 1;
+        display: grid;
+        place-content: center;
+        text-align: center;
+        padding: 30px;
+        color: var(--muted);
+        gap: 6px;
+      }
+      .blank h2 {
+        font-family: var(--display);
+        font-size: 1.6rem;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      [hidden] {
+        display: none !important;
+      }
+
+      /* ---------- mobile: one pane at a time ---------- */
+      @media (max-width: 820px) {
+        body {
+          padding: 0;
+        }
+        .app {
+          display: block;
+        }
+        .panel {
+          border-radius: 0;
+          height: 100%;
+        }
+        #convo {
+          display: none;
+        }
+        .app.open #inbox {
+          display: none;
+        }
+        .app.open #convo {
+          display: flex;
+        }
+        .back {
+          display: grid;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- INBOX -->
+      <aside class="panel" id="inbox" aria-label="Inbox">
+        <div class="top">
+          <h1>Chats</h1>
+          <button
+            class="icon-btn"
+            id="newChat"
+            aria-label="Search or start a new chat">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z" />
+            </svg>
+          </button>
+          <a class="icon-btn" href="/logout" aria-label="Log out">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+              <path d="M16 17l5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+          </a>
+        </div>
+        <div class="search">
+          <input
+            id="q"
+            type="search"
+            placeholder="Search or start a new chat"
+            aria-label="Search chats" />
+        </div>
+        <div class="filters">
+          <button class="chip" data-f="all" aria-pressed="true">All</button>
+          <button class="chip" data-f="unread" aria-pressed="false">
+            Unread
+          </button>
+          <button class="chip" data-f="online" aria-pressed="false">
+            Online
+          </button>
+        </div>
+        <div class="list" id="list"></div>
+      </aside>
+
+      <!-- CONVERSATION -->
+      <main class="panel" id="convo" aria-label="Conversation">
+        <div class="blank" id="blank">
+          <h2>Pick a conversation</h2>
+          <p>Choose a chat on the left to read and reply.</p>
+        </div>
+        <section id="room" hidden style="display: contents">
+          <div class="head">
+            <button class="icon-btn back" id="back" aria-label="Back to chats">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <div class="avatar" id="hAvatar"></div>
+            <div class="meta">
+              <div class="name" id="hName"></div>
+              <div class="status" id="hStatus"></div>
+            </div>
+          </div>
+          <div class="thread" id="thread" aria-live="polite"></div>
+          <form class="composer" id="composer" autocomplete="off">
+            <input
+              id="text"
+              type="text"
+              placeholder="Type a message"
+              aria-label="Message" />
+            <button class="send" type="submit" aria-label="Send message">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M3.4 20.4l17.4-8a.5.5 0 000-.9L3.4 3.6a.5.5 0 00-.7.6L5 11l9 1-9 1-2.3 6.8a.5.5 0 00.7.6z" />
+              </svg>
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // ==========================================
+      // DEMO DATA -> replace with data from Flask / MongoDB
+      // e.g. fetch("/api/chats") and fetch("/api/messages/" + id)
+      // message format: [direction, text, time, status]
+      // ==========================================
+      const chats = [
+        {
+          id: 1,
+          name: "Rahim Uddin",
+          color: "#790d16",
+          online: true,
+          unread: 2,
+          time: "9:41 AM",
+          msgs: [
+            [
+              "in",
+              "Assalamu alaikum! Did you finish the accounting assignment?",
+              "9:30 AM",
+            ],
+            [
+              "out",
+              "Walaikum assalam. Almost, just the ledger part is left.",
+              "9:34 AM",
+              "seen",
+            ],
+            [
+              "in",
+              "Nice. Can you send me your trial balance when done?",
+              "9:40 AM",
+            ],
+            ["in", "I'm stuck on the adjustments", "9:41 AM"],
+          ],
+        },
+        {
+          id: 2,
+          name: "JnU Study Group",
+          color: "#4f6f86",
+          online: false,
+          unread: 0,
+          time: "Yesterday",
+          msgs: [
+            ["in", "Class test on Sunday, chapter 3 to 5.", "6:12 PM"],
+            ["out", "Thanks for the update!", "6:20 PM", "seen"],
+          ],
+        },
+        {
+          id: 3,
+          name: "Nusrat Jahan",
+          color: "#8a5a2b",
+          online: true,
+          unread: 1,
+          time: "8:15 AM",
+          msgs: [["in", "Can we meet at the library at 3?", "8:15 AM"]],
+        },
+        {
+          id: 4,
+          name: "Mom",
+          color: "#3f6b4f",
+          online: false,
+          unread: 0,
+          time: "Tuesday",
+          msgs: [
+            ["in", "Have you eaten?", "1:05 PM"],
+            [
+              "out",
+              "Yes, just had lunch. I'll call tonight.",
+              "1:10 PM",
+              "sent",
+            ],
+          ],
+        },
+        {
+          id: 5,
+          name: "Tanvir Hasan",
+          color: "#5c3a6b",
+          online: false,
+          unread: 0,
+          time: "Monday",
+          msgs: [
+            [
+              "out",
+              "Did you push the Flask code to GitHub?",
+              "4:00 PM",
+              "delivered",
+            ],
+          ],
+        },
+      ];
+
+      const $ = (id) => document.getElementById(id);
+      const app = $("app"),
+        list = $("list"),
+        thread = $("thread");
+      let active = null,
+        filter = "all",
+        query = "";
+
+      const initials = (n) =>
+        n
+          .split(" ")
+          .map((w) => w[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase();
+      const esc = (s) =>
+        s.replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const nowTime = () =>
+        new Date().toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        });
+
+      const SVG =
+        '<svg class="CLS" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+      function tick(state) {
+        if (state === "sent")
+          return (
+            SVG.replace("CLS", "ticks") +
+            '<path d="M2 6.5l3.5 3.5L13 2.5"/></svg>'
+          );
+        const cls = state === "seen" ? "ticks seen" : "ticks";
+        return (
+          SVG.replace("CLS", cls) +
+          '<path d="M1 6.5L4.5 10 11 2.5"/><path d="M7 9.5l.5.5L14.5 2.5"/></svg>'
+        );
+      }
+
+      // ---------- inbox list ----------
+      function renderList() {
+        const rows = chats.filter(
+          (c) =>
+            c.name.toLowerCase().includes(query) &&
+            (filter === "all" ||
+              (filter === "unread" && c.unread) ||
+              (filter === "online" && c.online)),
+        );
+        if (!rows.length) {
+          list.innerHTML =
+            '<p class="empty-list">No chats match. Try a different search or filter.</p>';
+          return;
+        }
+        list.innerHTML = rows
+          .map((c) => {
+            const last = c.msgs[c.msgs.length - 1];
+            const prefix = last[0] === "out" ? "You: " : "";
+            return (
+              '<button class="chat" data-id="' +
+              c.id +
+              '"' +
+              (active === c.id ? ' aria-current="true"' : "") +
+              ">" +
+              '<div class="avatar' +
+              (c.online ? " online" : "") +
+              '" style="background:' +
+              c.color +
+              '">' +
+              initials(c.name) +
+              "</div>" +
+              '<div class="meta"><div class="line1"><span class="name">' +
+              esc(c.name) +
+              '</span><span class="time' +
+              (c.unread ? " unread" : "") +
+              '">' +
+              c.time +
+              "</span></div>" +
+              '<div class="line2"><span class="preview">' +
+              prefix +
+              esc(last[1]) +
+              "</span>" +
+              (c.unread ? '<span class="badge">' + c.unread + "</span>" : "") +
+              "</div></div></button>"
+            );
+          })
+          .join("");
+      }
+
+      // ---------- conversation ----------
+      function bubble(m) {
+        return (
+          '<div class="msg ' +
+          m[0] +
+          '">' +
+          esc(m[1]) +
+          '<div class="t"><span>' +
+          m[2] +
+          "</span>" +
+          (m[0] === "out" ? tick(m[3] || "sent") : "") +
+          "</div></div>"
+        );
+      }
+
+      function openChat(id) {
+        const c = chats.find((x) => x.id === id);
+        active = id;
+        c.unread = 0;
+        $("blank").hidden = true;
+        $("room").hidden = false;
+        const av = $("hAvatar");
+        av.textContent = initials(c.name);
+        av.style.background = c.color;
+        av.className = "avatar" + (c.online ? " online" : "");
+        $("hName").textContent = c.name;
+        $("hStatus").textContent = c.online ? "Online" : "Offline";
+        thread.innerHTML =
+          '<div class="day">Today</div>' + c.msgs.map(bubble).join("");
+        thread.scrollTop = thread.scrollHeight;
+        app.classList.add("open");
+        renderList();
+        if (matchMedia("(min-width: 821px)").matches) $("text").focus();
+      }
+
+      function send(text) {
+        const c = chats.find((x) => x.id === active);
+        const t = nowTime();
+        const m = ["out", text, t, "sent"];
+        c.msgs.push(m);
+        c.time = t;
+        thread.insertAdjacentHTML("beforeend", bubble(m));
+        thread.scrollTop = thread.scrollHeight;
+        renderList();
+        // TODO: save to MongoDB, e.g. fetch("/api/send", { method: "POST", ... })
+      }
+
+      // ---------- events ----------
+      list.addEventListener("click", (e) => {
+        const row = e.target.closest(".chat");
+        if (row) openChat(Number(row.dataset.id));
+      });
+      $("back").addEventListener("click", () => app.classList.remove("open"));
+      $("q").addEventListener("input", (e) => {
+        query = e.target.value.trim().toLowerCase();
+        renderList();
+      });
+      document.querySelectorAll(".chip").forEach((b) =>
+        b.addEventListener("click", () => {
+          filter = b.dataset.f;
+          document
+            .querySelectorAll(".chip")
+            .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+          renderList();
+        }),
+      );
+      $("composer").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const v = $("text").value.trim();
+        if (!v || active === null) return;
+        send(v);
+        $("text").value = "";
+      });
+      $("newChat").addEventListener("click", () => $("q").focus());
+
+      renderList();
+    </script>
+  </body>
+</html>
