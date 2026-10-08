@@ -4,6 +4,7 @@ import secrets
 import hashlib
 import os
 from bson import ObjectId
+from bson.errors import InvalidId
 
 MONGODB_URL = os.getenv("MONGODB_URL")
 
@@ -154,19 +155,17 @@ def transfer_temp_to_user(identifier):
     return result.inserted_id
 
 
-
-def get_user_id(email):
-    user = user_collection.find_one({"email": email})
-
-    if user:
-        return user["_id"]
-
-    return None
+def get_user_id(identifier):
+    user = user_collection.find_one(
+        {"$or": [{"email": identifier}, {"phone": identifier}]},
+        {"_id": 1}
+    )
+    return str(user["_id"]) if user else None   # str, so it fits in the session
 
 
 def get_user_by_id(user_id):
-    user = user_collection.find_one({
-        "_id": ObjectId(user_id)
-    })
-
-    return user
+    try:
+        oid = ObjectId(user_id)
+    except (InvalidId, TypeError):
+        return None
+    return user_collection.find_one({"_id": oid})
