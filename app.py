@@ -146,3 +146,66 @@ def verified():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404
+
+
+
+
+
+
+
+
+
+
+@app.route("/forgot-submit", methods=["POST"])
+def forgot_submit():
+    email = (request.form.get("email") or "").strip().lower()
+
+    # Same response whether or not the account exists (prevents email enumeration)
+    if db.get_user_by_email(email):
+        code = otp.generate_otp()
+        otp.save_otp("reset:" + email, code)
+        mail.sent_reset_mail(email, code)
+
+    return redirect("/forgot-verify?email=" + email)
+
+
+@app.route("/forgot-verify")
+def forgot_verify():
+    return render_template("forgot_verify.html", email=request.args.get("email"))
+
+
+@app.route("/forgot-verify-submit", methods=["POST"])
+def forgot_verify_submit():
+    email = (request.form.get("email") or "").strip().lower()
+    code = request.form.get("otp")
+
+    if not otp.verify_otp("reset:" + email, code):
+        return render_template("forgot_verify.html", email=email,
+                               error="Incorrect or expired code.")
+
+    db.otp_collection.delete_one({"identifier": "reset:" + email})  # one-time use
+    session["reset_email"] = email                                  # proves OTP passed
+    return redirect("/reset-password")
+
+
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+    email = session.get("reset_email")
+    if not email:
+        return redirect("/forgot")
+
+    if request.method == "POST":
+        new = request.form.get("password", "")
+        confirm = request.form.get("confirm", "")
+
+        if len(new) < 8:
+            return render_template("reset_password.html", error="Use at least 8 characters.")
+        if new != confirm:
+            return render_template("reset_password.html", error="Passwords don't match.")
+
+        db.update_password(email, pd.hash_password(new))
+        session.pop("reset_email", None)
+        session["login_error"] = "Password updated. Please log in."
+        return redirect("/")
+
+    return render_template("reset_password.html")

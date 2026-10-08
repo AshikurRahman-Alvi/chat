@@ -27,3 +27,18 @@ def sent_mail(receiver, otp):
     except Exception as e:
         print("Email error:", repr(e))
         return False
+
+
+def sent_reset_mail(receiver, otp):
+    try:
+        resend.Emails.send({
+            "from": sender,
+            "to": [receiver],
+            "subject": "Reset your password",
+            "text": f"Your password reset code is {otp}\n\nIt expires in 5 minutes. "
+                    f"If you didn't request this, ignore this email."
+        })
+        return True
+    except Exception as e:
+        print("Email error:", repr(e))
+        return False

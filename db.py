@@ -169,3 +169,21 @@ def get_user_by_id(user_id):
     except (InvalidId, TypeError):
         return None
     return user_collection.find_one({"_id": oid})
+
+
+
+
+
+
+def get_user_by_email(email):
+    return user_collection.find_one({"email": email}, {"_id": 1})
+
+def update_password(email, password_hash):
+    result = user_collection.update_one(
+        {"email": email},
+        {"$set": {
+            "password_hash": password_hash,
+            "account.updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    return result.modified_count == 1
