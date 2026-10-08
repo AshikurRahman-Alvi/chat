@@ -1,9 +1,10 @@
 from pymongo import MongoClient
 from datetime import datetime, timezone
 import hashlib
+import os
 
+MONGODB_URL = os.getenv("MONGODB_URL")
 
-MONGODB_URL = "mongodb+srv://rominasultana9_db_user:7GYZIXphaUiekxKc@damo.bnbkodq.mongodb.net/?appName=Damo"
 
 client = MongoClient(MONGODB_URL)
 
