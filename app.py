@@ -94,7 +94,7 @@ def verify_otp_route():
    
 
     result = otp.verify_otp(email,otps)
-    print(result)
+    #print(result)
 
     # verify OTP here
 
@@ -104,9 +104,9 @@ def verify_otp_route():
             email=email,
             error="Incorrect OTP. Please try again."
         )
-
-    # OTP is correct
-    return redirect("/verified")
+    else:
+        # OTP is correct
+        return redirect("/verified")
 
 
 @app.route("/Create_account")
