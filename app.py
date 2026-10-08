@@ -223,3 +223,14 @@ def reset_password():
         return redirect("/")
 
     return render_template("reset_password.html")
+
+
+
+
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/")
