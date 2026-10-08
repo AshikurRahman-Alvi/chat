@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Forgot password</title>
+<title>Enter reset code</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
@@ -82,43 +82,107 @@
 <body>
   <main style="width:100%;max-width:420px">
     <div class="card">
-      <h1>Forgot your password?</h1>
-      <p class="sub">Enter the email on your account and we'll send you a code to reset it.</p>
+      <h1>Check your inbox</h1>
+      <p class="sub">If an account exists for <strong>{{ email }}</strong>, we've sent a 6-digit code to it. It expires in 10 minutes.</p>
 
-      <form id="forgot" method="POST" action="/forgot-submit" novalidate>
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
-                 placeholder="Enter your email" required
-                 aria-invalid="{{ 'true' if error else 'false' }}">
-          <p class="error" id="email-error" role="alert">{{ error or '' }}</p>
-        </div>
-        <button class="btn" type="submit">Send reset code</button>
+      <form id="code-form" method="POST" action="/forgot-verify-submit" novalidate>
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="otp" id="otp-value">
+        <span class="legend" id="otp-label">Reset code</span>
+        <div class="otp" role="group" aria-labelledby="otp-label" id="otp"></div>
+        <p class="error" id="otp-error" role="alert">{{ error or '' }}</p>
+        <button class="btn" type="submit">Verify code</button>
       </form>
 
-      <div class="divider" role="separator">OR</div>
-      <p class="signin">Remembered it? <a href="/">Back to log in</a></p>
+      <p class="again">Didn't get it?
+        <form method="POST" action="/forgot-submit" id="resend-form">
+          <input type="hidden" name="email" value="{{ email }}">
+          <button type="submit" class="linkbtn" id="resend" disabled>Resend code</button>
+        </form>
+      </p>
+      <p class="again">Wrong address? <a href="/forgot">Try again</a></p>
     </div>
     <p class="legal">Check your spam folder if nothing arrives in a minute.</p>
   </main>
 
 <script>
-  const form = document.getElementById('forgot');
-  const input = document.getElementById('email');
-  const err = document.getElementById('email-error');
+  const LENGTH = 6, RESEND_SECONDS = 30;
+  const $ = (id) => document.getElementById(id);
+  const boxes = [];
+  const hasServerError = $('otp-error').textContent.trim() !== '';
 
-  form.addEventListener('submit', (e) => {
-    const v = input.value.trim();
-    let msg = '';
-    if (!v) msg = 'Enter your email.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'Enter a valid email.';
-    if (msg) {
+  for (let i = 0; i < LENGTH; i++) {
+    const b = document.createElement('input');
+    b.type = 'text'; b.inputMode = 'numeric'; b.maxLength = 1;
+    b.autocomplete = i === 0 ? 'one-time-code' : 'off';
+    b.setAttribute('aria-label', 'Digit ' + (i + 1) + ' of ' + LENGTH);
+    b.setAttribute('aria-invalid', hasServerError ? 'true' : 'false');
+    $('otp').append(b);
+    boxes.push(b);
+  }
+  boxes[0].focus();
+
+  const code = () => boxes.map((b) => b.value).join('');
+  function setError(msg) {
+    $('otp-error').textContent = msg;
+    boxes.forEach((b) => b.setAttribute('aria-invalid', msg ? 'true' : 'false'));
+  }
+  function fill(digits, start) {
+    let i = start;
+    for (const ch of digits) { if (i >= LENGTH) break; boxes[i++].value = ch; }
+    boxes[Math.min(i, LENGTH - 1)].focus();
+  }
+  function submitIfFull() {
+    if (code().length === LENGTH) $('code-form').requestSubmit();
+  }
+
+  boxes.forEach((box, i) => {
+    box.addEventListener('input', () => {
+      const digits = box.value.replace(/\D/g, '');
+      box.value = '';
+      if (digits) fill(digits, i);
+      setError('');
+      submitIfFull();
+    });
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !box.value && i > 0) { boxes[i - 1].value = ''; boxes[i - 1].focus(); }
+      else if (e.key === 'ArrowLeft' && i > 0) boxes[i - 1].focus();
+      else if (e.key === 'ArrowRight' && i < LENGTH - 1) boxes[i + 1].focus();
+    });
+    box.addEventListener('paste', (e) => {
       e.preventDefault();
-      err.textContent = msg;
-      input.setAttribute('aria-invalid', 'true');
-      input.focus();
-    }
+      const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, LENGTH);
+      if (!digits) return;
+      fill(digits, 0); setError(''); submitIfFull();
+    });
+    box.addEventListener('focus', () => box.select());
   });
+
+  $('code-form').addEventListener('submit', (e) => {
+    const v = code();
+    if (v.length < LENGTH) {
+      e.preventDefault();
+      setError('Enter all ' + LENGTH + ' digits of the code.');
+      (boxes.find((b) => !b.value) || boxes[0]).focus();
+      return;
+    }
+    $('otp-value').value = v;   // sent to Flask as "otp"
+  });
+
+  // Resend countdown
+  let left = RESEND_SECONDS;
+  const resend = $('resend');
+  resend.textContent = 'Resend code in ' + left + 's';
+  const timer = setInterval(() => {
+    left--;
+    if (left <= 0) {
+      clearInterval(timer);
+      resend.disabled = false;
+      resend.textContent = 'Resend code';
+    } else {
+      resend.textContent = 'Resend code in ' + left + 's';
+    }
+  }, 1000);
 </script>
 </body>
 </html>
